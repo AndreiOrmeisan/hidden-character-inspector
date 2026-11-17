@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   description:
     "Find invisible Unicode characters, understand their purpose, and clean text carefully. Inspect zero-width spaces, non-breaking spaces, emoji controls, and more in your browser.",
   alternates: { canonical: "/" },
+  other: {
+    "google-adsense-account": "ca-pub-8517954432428097",
+  },
   openGraph: {
     type: "website",
     siteName,
