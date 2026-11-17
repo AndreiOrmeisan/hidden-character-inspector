@@ -16,18 +16,17 @@ Open http://localhost:3000. Restart development after changing worker code. Inpu
 
 ## Production origin and Cloudflare Pages
 
-The actual production domain is intentionally unconfigured. Set `SITE_URL` to the actual HTTPS origin in `.env.local`, the PowerShell environment, or the Cloudflare Pages build environment. Use an origin without a path. Production builds fail if it is missing, insecure, or localhost, preventing invalid sitemap/canonical URLs. It is a build-time setting. Rebuild when the domain changes.
+The production origin defaults to `https://hidden-character-inspector.pages.dev`. `npm run build` uses this HTTPS origin for canonical URLs, Open Graph metadata, sitemap.xml, and robots.txt without requiring an environment variable. For a future custom domain, override `SITE_URL` in `.env.local`, the PowerShell environment, or the Cloudflare Pages build environment. Use an HTTPS origin without a path. Insecure or localhost production overrides fail validation. This setting is resolved at build time. Rebuild when the domain changes.
 
 ```powershell
-$env:SITE_URL = Read-Host 'Actual HTTPS site origin'
 npm.cmd run build
 ```
 
-Cloudflare Pages settings are **build command** `npm run build` and **output directory** `out`. Select the static framework preset, configure Node.js 22 or newer and `SITE_URL`, and upload the entire `out` directory. No deployment or hosting connection is included in this project setup.
+Cloudflare Pages settings are **build command** `npm run build` and **output directory** `out`. Select the static framework preset and configure Node.js 22 or newer. Keep `SITE_URL` unset or set it to `https://hidden-character-inspector.pages.dev` for this deployment. Remove any old `https://example.com` override from the hosting build environment. Upload the entire `out` directory. Deployment is a separate step.
 
 Worker generation runs inside Next configuration, including direct `next build` invocations. Postbuild verifies all six canonical/Open Graph URLs, sitemap, robots directive, and the worker asset. Do not omit `inspector-worker.js` from an upload.
 
-For QA only, the reserved origin `https://example.com` was used. This is not a selected deployment domain. The browser tests use that reserved test origin and serve `out` over local HTTP.
+Browser tests serve the production export over local HTTP and check metadata against the configured production origin. Local test-server addresses are separate from the production SEO URLs.
 
 ## Checks and production browser tests
 
@@ -35,7 +34,6 @@ For QA only, the reserved origin `https://example.com` was used. This is not a s
 npm.cmd run lint
 npm.cmd run typecheck
 npm.cmd test
-$env:SITE_URL = 'https://example.com'
 npm.cmd run build
 npx.cmd playwright install chromium
 npm.cmd run test:browser

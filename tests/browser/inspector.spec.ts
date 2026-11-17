@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { readFile } from "node:fs/promises";
+import { resolveSiteUrl } from "../../src/lib/site";
 
 test("safe inspection preserves emoji and language while copying and downloading cleaned text", async ({
   page,
@@ -152,7 +153,7 @@ test("six static pages have unique titles, production URLs, and working internal
     await expect(page.locator("h1")).toHaveCount(1);
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       "href",
-      `https://example.com${path}`,
+      `${resolveSiteUrl(process.env.SITE_URL, true)}${path}`,
     );
     for (const href of await page
       .locator('a[href^="/"]')

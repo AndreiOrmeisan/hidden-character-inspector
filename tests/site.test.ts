@@ -1,9 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { resolveSiteUrl } from "../src/lib/site";
-test("production requires an explicit HTTPS origin", () => {
+import { resolveSiteUrl, PRODUCTION_SITE_URL } from "../src/lib/site";
+test("production defaults to its Cloudflare HTTPS origin and validates overrides", () => {
+  assert.equal(resolveSiteUrl(undefined, true), PRODUCTION_SITE_URL);
+  assert.equal(resolveSiteUrl("", true), PRODUCTION_SITE_URL);
   for (const value of [
-    undefined,
     "http://localhost:3000",
     "https://localhost",
     "http://example.com",

@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
 export const siteName = "Hidden Character Inspector";
+export const PRODUCTION_SITE_URL = "https://hidden-character-inspector.pages.dev";
 export function resolveSiteUrl(
   value: string | undefined,
   production: boolean,
 ): string {
-  if (!value && production)
-    throw new Error(
-      "Set SITE_URL to the actual HTTPS site origin before a production build. See README.md.",
-    );
-  const url = new URL(value || "http://localhost:3000");
+  const url = new URL(
+    value || (production ? PRODUCTION_SITE_URL : "http://localhost:3000"),
+  );
   if (
     production &&
     (url.protocol !== "https:" ||
